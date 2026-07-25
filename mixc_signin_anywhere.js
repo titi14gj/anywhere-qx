@@ -87,11 +87,8 @@ function loadCfg() {
   try { return JSON.parse(raw); } catch (_) { return null; }
 }
 
-function saveCfg(cfg) {
-  Anywhere.store.set(STORE_CFG, JSON.stringify(cfg), true);
-}
-
 async function sign(cfg) {
+  Anywhere.log.info("一点万象：开始发送签到请求");
   const ms = Date.now();
   const p = {
     "X-Mixc-Swimlane": cfg["X-Mixc-Swimlane"] || "s1",
@@ -122,9 +119,13 @@ async function sign(cfg) {
       "Accept-Language": "zh-CN,zh-Hans;q=0.9"
     },
     body: buildBody(p),
-    timeout: 10000
+    timeout: 6000
   });
 
+  Anywhere.log.info("一点万象：收到响应，HTTP " + response.status);
+  if (response.status < 200 || response.status >= 300) {
+    throw new Error("HTTP 状态异常：" + response.status);
+  }
   const text = Anywhere.codec.utf8.decode(response.body);
   let result;
   try { result = JSON.parse(text); }
@@ -147,7 +148,10 @@ async function sign(cfg) {
 }
 
 async function runCron() {
-  const cfg = loadCfg();
+  const cfgRaw = Anywhere.store.getString(STORE_CFG, true);
+  let cfg = null;
+  try { cfg = cfgRaw ? JSON.parse(cfgRaw) : null; } catch (_) {}
+
   if (!cfg || !cfg.token || !cfg.deviceParams || !cfg.mallNo) {
     const msg = "未抓到有效参数，请先启用 MITM 规则并打开一点万象签到页";
     Anywhere.store.set(STORE_RESULT, today() + " " + msg, true);
@@ -161,69 +165,25 @@ async function runCron() {
     return;
   }
 
-  // 先加当日锁，避免手动运行与 cron 并发触发。
   Anywhere.store.set(STORE_DAY, day, true);
   try {
     const result = await sign(cfg);
     Anywhere.store.set(STORE_RESULT, day + " " + result, true);
     Anywhere.log.info("一点万象：" + result);
   } catch (e) {
-    // 失败后释放当日锁，便于手动重跑或下一次 cron 重试。
     Anywhere.store.delete(STORE_DAY, true);
     Anywhere.store.set(STORE_RESULT, day + " " + String(e), true);
     Anywhere.log.error("一点万象：" + e);
   }
 }
 
-async function captureRequest(ctx) {
-  if (!ctx || ctx.phase !== "request" || !ctx.url ||
-      ctx.url.indexOf("/mixc/gateway") < 0) return;
-
-  let form;
+/* cron 独立入口：脚本加载后立即执行，不等待执行器调用 main/process。 */
+(async function () {
   try {
-    form = parseForm(Anywhere.codec.utf8.decode(ctx.body));
-  } catch (e) {
-    Anywhere.log.warning("一点万象：请求体读取失败 " + e);
-    return;
-  }
-
-  // 忽略签到请求本身，只从 App 的其他有效 H5 请求更新参数。
-  if (form.action === "mixc.app.memberSign.sign") return;
-  if (form.platform !== "h5" || !form.token || !form.deviceParams) return;
-
-  const previous = loadCfg() || {};
-  const saved = {};
-  KEEP.forEach(function (k) {
-    if (form[k] !== undefined) saved[k] = form[k];
-    else if (previous[k] !== undefined) saved[k] = previous[k];
-  });
-
-  saved.appId = saved.appId || "68a91a5bac6a4f3e91bf4b42856785c6";
-  saved.platform = "h5";
-  saved.apiVersion = saved.apiVersion || "1.0";
-
-  try {
-    saveCfg(saved);
-    Anywhere.log.info("一点万象：签到参数已更新，mallNo=" + saved.mallNo);
-  } catch (e) {
-    Anywhere.log.error("一点万象：参数保存失败 " + e);
-  }
-}
-
-/*
- * 通用入口：
- * - MITM 传入 request ctx 时，仅抓取参数；
- * - cron 无 ctx（或非 request ctx）时，执行签到。
- */
-async function process(ctx) {
-  if (ctx && ctx.phase === "request") {
-    await captureRequest(ctx);
-  } else {
+    Anywhere.log.info("一点万象：cron 任务启动");
     await runCron();
+    Anywhere.log.info("一点万象：cron 任务结束");
+  } catch (e) {
+    Anywhere.log.error("一点万象：cron 未捕获异常 " + e);
   }
-}
-
-// 兼容以 main() 为入口的 Anywhere cron 环境。
-async function main() {
-  await runCron();
-}
+})();
