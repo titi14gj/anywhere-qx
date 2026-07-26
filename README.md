@@ -4,15 +4,15 @@
 
 ## 文件
 
-- `mixc_signin_anywhere.amrs`：导入 Anywhere，用于捕获并更新登录参数。
-- `mixc_signin_anywhere.js`：添加到 Anywhere cron 定时任务，用于执行签到。
+- [`scripts/mixc_signin_anywhere.amrs`](scripts/mixc_signin_anywhere.amrs)：导入 Anywhere，用于捕获并更新登录参数。
+- [`scripts/mixc_signin_anywhere.js`](scripts/mixc_signin_anywhere.js)：添加到 Anywhere cron 定时任务，用于执行签到。
 
 ## 使用方法
 
 1. 在 Anywhere 中安装并信任 MITM 证书。
-2. 导入并启用 `mixc_signin_anywhere.amrs`。
+2. 导入并启用 `scripts/mixc_signin_anywhere.amrs`。
 3. 打开一点万象 App，进入会员页或签到页，使脚本捕获 `token`、`mallNo` 和设备参数。
-4. 在 Anywhere 的 cron 定时任务中添加 `mixc_signin_anywhere.js`。
+4. 在 Anywhere 的 cron 定时任务中添加 `scripts/mixc_signin_anywhere.js`。
 5. 建议 cron 表达式：`1 0 * * *`，即每天 00:01 执行。
 6. 首次配置后，可手动运行一次 cron 脚本验证。
 
