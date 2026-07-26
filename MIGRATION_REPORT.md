@@ -12,7 +12,7 @@
   - `[general] excluded_routes` 转为 7 条直连网段规则。
 - `rewrite/`：9 个 Quantumult X 兼容 `.snippet`，共 4508 条重写入口。
 - `scripts/`：已有可运行的 Anywhere 油价 Automation；一点万象保留当前实验和诊断结果。
-- `surge/`：2 个 Surge module（京东比价、一点万象自动签到）。
+- `surge/`：11 个 Surge module：9 个由 Anywhere/QX snippet 转换，另含京东比价和一点万象自动签到；同时提供 2 个兼容助手脚本。
 
 公开产物不包含节点订阅地址、代理凭据、MITM P12 证书、证书口令、Cookie 或个人 token。
 
@@ -61,6 +61,8 @@ Quantumult X 的 `HOST`/`DOMAIN` 是精确域名匹配，而 Anywhere 没有精�
 | 打断请求 `switchMode.js` | 未转换 | 依赖 Quantumult X 专属 `$configuration.sendMessage` 切换运行模式，Anywhere/Surge 无直接等价接口。 |
 
 京东比价原资源是 `.sgmodule`，因此保存在 `surge/`，没有伪装成 Anywhere snippet。一点万象另生成 Surge module，包含请求抓参和每日 cron。
+
+9 个已发布的 Anywhere/QX snippet 也全部生成了同名 Surge module。4508 条重写入口中，4477 条已转换为 Surge `[URL Rewrite]` 或 `[Script]`；剩余 31 条 `jsonjq-response-body` 因 Surge 没有内置 jq 执行器，仅作为带原因的注释保留在 `adblock_naisi.sgmodule` 中。
 
 ## 未转换：自动任务
 

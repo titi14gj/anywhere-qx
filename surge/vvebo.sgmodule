@@ -1,0 +1,16 @@
+#!name=VVEBO 用户主页修复 (QX 转 Surge)
+#!desc=由仓库中的 Quantumult X .snippet 自动转换；请查看文件末尾的兼容性注释
+#!source=https://raw.githubusercontent.com/bin64/Scripts/main/QuantumultX/vvebo.js
+
+[Script]
+vvebo 0001 = type=http-request, pattern=^https:\/\/api\.weibo\.cn\/2\/users\/show\?, script-path=https://raw.githubusercontent.com/bin64/Scripts/main/QuantumultX/vvebo.js, requires-body=false, max-size=-1, timeout=30
+vvebo 0002 = type=http-request, pattern=^https:\/\/api\.weibo\.cn\/2\/statuses\/user_timeline\?, script-path=https://raw.githubusercontent.com/bin64/Scripts/main/QuantumultX/vvebo.js, requires-body=false, max-size=-1, timeout=30
+vvebo 0003 = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/profile\/statuses\/tab\?, script-path=https://raw.githubusercontent.com/bin64/Scripts/main/QuantumultX/vvebo.js, requires-body=true, max-size=-1, timeout=30
+
+[MITM]
+hostname = %APPEND% api.weibo.cn
+
+# Compatibility report
+# Converted URL Rewrite entries: 0
+# Converted Script entries: 3
+# Unsupported entries retained below: 0

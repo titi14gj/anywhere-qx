@@ -1,0 +1,14 @@
+#!name=BoxJS (QX 转 Surge)
+#!desc=由仓库中的 Quantumult X .snippet 自动转换；请查看文件末尾的兼容性注释
+#!source=https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf
+
+[Script]
+boxjs 0001 = type=http-request, pattern=^https?:\/\/(.+\.)?boxjs\.(com|net), script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.js, requires-body=false, max-size=-1, timeout=30
+
+[MITM]
+hostname = %APPEND% boxjs.com, boxjs.net, *.boxjs.com, *.boxjs.net
+
+# Compatibility report
+# Converted URL Rewrite entries: 0
+# Converted Script entries: 1
+# Unsupported entries retained below: 0

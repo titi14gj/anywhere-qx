@@ -1,0 +1,17 @@
+#!name=BiliBili Enhanced (QX 转 Surge)
+#!desc=由仓库中的 Quantumult X .snippet 自动转换；请查看文件末尾的兼容性注释
+#!source=https://github.com/BiliUniverse/Enhanced/releases/latest/download/BiliBili.Enhanced.snippet
+
+[Script]
+bilibili_enhanced 0001 = type=http-response, pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/resource\/show\/tab\/v2\?, script-path=https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js, requires-body=true, max-size=-1, timeout=30
+bilibili_enhanced 0002 = type=http-response, pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/account\/mine(\/ipad)?\?, script-path=https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js, requires-body=true, max-size=-1, timeout=30
+bilibili_enhanced 0003 = type=http-response, pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/region\/index\?, script-path=https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js, requires-body=true, max-size=-1, timeout=30
+bilibili_enhanced 0004 = type=http-response, pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/channel\/region\/list\?, script-path=https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js, requires-body=true, max-size=-1, timeout=30
+
+[MITM]
+hostname = %APPEND% app.bilibili.com, app.biliapi.net
+
+# Compatibility report
+# Converted URL Rewrite entries: 0
+# Converted Script entries: 4
+# Unsupported entries retained below: 0

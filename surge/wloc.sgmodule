@@ -1,0 +1,15 @@
+#!name=Apple WLOC 定位修改 (QX 转 Surge)
+#!desc=由仓库中的 Quantumult X .snippet 自动转换；请查看文件末尾的兼容性注释
+#!source=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.conf
+
+[Script]
+wloc 0001 = type=http-response, pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/clls\/wloc, script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc.js, requires-body=true, max-size=-1, timeout=30
+wloc 0002 = type=http-request, pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save, script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc-settings.js, requires-body=false, max-size=-1, timeout=30
+
+[MITM]
+hostname = %APPEND% gs-loc.apple.com, gs-loc-cn.apple.com
+
+# Compatibility report
+# Converted URL Rewrite entries: 0
+# Converted Script entries: 2
+# Unsupported entries retained below: 0
