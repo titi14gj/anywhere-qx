@@ -30,6 +30,13 @@
 
 公开版 Anywhere 的 `Anywhere.store` 按 MITM 规则集隔离；自定义 Automation 若未绑定相同存储作用域，将无法读取 MITM 捕获的登录参数。因此该脚本暂缓使用，等待客户端提供共享存储能力。
 
+### `$persistentStore` 最小测试
+
+- [`scripts/mixc_signin_shared_test.amrs`](scripts/mixc_signin_shared_test.amrs)：以已验证可抓参的规则为基线，仅增加一次受保护的共享存储写入。
+- [`scripts/mixc_signin_shared_test.js`](scripts/mixc_signin_shared_test.js)：测试规则内嵌的可读源码。
+
+测试前必须停用原捕获规则，不能同时启用两条规则。打开一点万象签到页后，根据 MITM 日志中的 `$persistentStore=undefined`、`共享存储写入=成功/失败` 或“写入异常”判断 MITM 环境是否提供共享存储。原规则保持不变，可随时切回。
+
 ## 安全说明
 
 - 不要将 token、Cookie、设备参数或个人 API 密钥提交到仓库。
