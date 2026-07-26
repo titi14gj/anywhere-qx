@@ -1,46 +1,37 @@
-# 一点万象签到 Anywhere 版
+# Anywhere Scripts
 
-由 Quantumult X 脚本适配，采用“MITM 捕获参数 + cron 定时签到”的方式运行。
+将 Quantumult X、Surge 等平台的脚本适配为 Anywhere 可用格式。
 
-## 文件
+## 国内油价提醒
 
-- [`scripts/mixc_signin_anywhere.amrs`](scripts/mixc_signin_anywhere.amrs)：导入 Anywhere，用于捕获并更新登录参数。
-- [`scripts/mixc_signin_anywhere.js`](scripts/mixc_signin_anywhere.js)：添加到 Anywhere cron 定时任务，用于执行签到。
+文件：[`scripts/oil_price_anywhere.js`](scripts/oil_price_anywhere.js)
 
-## 使用方法
+该脚本适用于支持 Automation/cron JavaScript 的 Anywhere 客户端，不依赖 MITM 或持久化存储。
 
-1. 在 Anywhere 中安装并信任 MITM 证书。
-2. 导入并启用 `scripts/mixc_signin_anywhere.amrs`。
-3. 打开一点万象 App，进入会员页或签到页，使脚本捕获 `token`、`mallNo` 和设备参数。
-4. 在 Anywhere 的 cron 定时任务中添加 `scripts/mixc_signin_anywhere.js`。
-5. 建议 cron 表达式：`1 0 * * *`，即每天 00:01 执行。
-6. 首次配置后，可手动运行一次 cron 脚本验证。
+### 使用方法
 
-## 脚本入口
+1. 将脚本完整复制到 Automation 的 JavaScript 输入框。
+2. 默认查询江苏油价。如需修改省份，编辑脚本顶部的：
 
-- `process(ctx)`：MITM 与 cron 通用入口。
-- `main()`：兼容以 `main` 为入口的 cron 环境。
+   ```javascript
+   const DEFAULT_PROVINCE = "江苏";
+   ```
 
-## 日志
+   省份名称不要带“省”字。
+3. 如果客户端支持 `$argument`，也可以传入 `广东`、`province=广东` 或 `{"province":"广东"}`。
+4. 手动运行一次验证日志和通知，然后按需设置 cron。
 
-成功时：
+脚本会依次尝试原脚本提供的 TianAPI 接口密钥，并把总请求时间控制在约 8 秒内。第三方接口密钥可能因额度、失效或服务变更而不可用。
 
-```text
-一点万象：签到成功，本次+10积分，当前……
-```
+## 一点万象签到（暂缓）
 
-已签到时：
+- [`scripts/mixc_signin_anywhere.amrs`](scripts/mixc_signin_anywhere.amrs)：MITM 捕获规则。
+- [`scripts/mixc_signin_anywhere.js`](scripts/mixc_signin_anywhere.js)：cron 签到脚本。
 
-```text
-一点万象：今日已签到
-```
+公开版 Anywhere 的 `Anywhere.store` 按 MITM 规则集隔离；自定义 Automation 若未绑定相同存储作用域，将无法读取 MITM 捕获的登录参数。因此该脚本暂缓使用，等待客户端提供共享存储能力。
 
-登录态失效时：
+## 安全说明
 
-```text
-一点万象：登录态失效，请重新进入签到页刷新参数
-```
-
-## 说明
-
-脚本设置了每日执行锁，避免手动运行与 cron 同时触发重复签到。请求失败时会释放当日锁，允许再次运行。
+- 不要将 token、Cookie、设备参数或个人 API 密钥提交到仓库。
+- 仅导入可信来源的 MITM 规则。
+- Automation 脚本中的 HTTP 请求会访问相应第三方服务，请自行确认其隐私政策与可用性。
