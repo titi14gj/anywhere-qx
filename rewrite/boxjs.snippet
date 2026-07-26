@@ -1,0 +1,9 @@
+#!name=BoxJS
+#!source=https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf
+#!converted=Quantumult X rewrite resource normalized for Anywhere .snippet import
+
+[rewrite_local]
+^https?:\/\/(.+\.)?boxjs\.(com|net) url script-analyze-echo-response https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.js
+
+[mitm]
+hostname = boxjs.com, boxjs.net, *.boxjs.com, *.boxjs.net

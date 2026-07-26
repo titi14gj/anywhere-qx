@@ -1,0 +1,27 @@
+# Twitch - Anywhere Routing Rule Set
+# Source: https://whatshub.top/rule/Twitch.list
+# Quantumult X policy: 🚀 策略选择
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = Twitch
+routing = 0
+
+2, ext-twitch.tv
+2, jtvnw.net
+2, live-video.net
+2, ttvnw.net
+2, twitch-ext.rootonline.de
+2, twitch.tv
+2, twitchcdn.net
+2, twitchsvc.net
+3, ttvnw
+0, 103.53.48.0/23
+0, 185.42.204.0/22
+0, 192.108.239.0/24
+0, 192.16.64.0/21
+0, 199.9.248.0/21
+0, 23.160.0.0/24
+0, 45.113.128.0/22
+0, 52.223.192.0/20
+0, 52.223.208.0/21
+0, 52.223.224.0/19
+0, 99.181.64.0/18

@@ -1,9 +1,7 @@
 # F1 TV - Anywhere Routing Rule Set
-# Converted from:
-# https://raw.githubusercontent.com/dler-io/Rules/main/Surge/Surge%203/Provider/Media/F1%20TV.list
-#
-# routing: 0 = Default. Import this file, then assign a proxy or chain in
-# Anywhere > Routing Rules.
+# Source: https://raw.githubusercontent.com/dler-io/Rules/main/Surge/Surge%203/Provider/Media/F1%20TV.list
+# Quantumult X policy: 🇺🇸 美国节点
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
 name = F1 TV
 routing = 0
 

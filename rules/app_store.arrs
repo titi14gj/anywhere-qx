@@ -1,0 +1,9 @@
+# App Store - Anywhere Routing Rule Set
+# Source: https://whatshub.top/rule/AppStore.list
+# Quantumult X policy: 🍎 苹果服务
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = App Store
+routing = 0
+
+2, apps.apple.com
+2, itunes.apple.com

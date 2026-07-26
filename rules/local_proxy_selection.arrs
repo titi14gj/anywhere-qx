@@ -1,0 +1,9 @@
+# Local rules converted from titi14gj-2025new.conf
+# Quantumult X policy: 🚀 策略选择
+# Exact HOST rules are represented as Anywhere domain-suffix rules.
+name = Local - 🚀 策略选择
+routing = 0
+
+2, buy.fulibavip.net
+2, data.fotmob.com
+2, klraw.pages.dev

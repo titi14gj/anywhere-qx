@@ -1,0 +1,11 @@
+# Weibo - Anywhere Routing Rule Set
+# Source: https://whatshub.top/rule/Weibo.list
+# Quantumult X policy: 🍟 新浪微博
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = Weibo
+routing = 0
+
+2, weibo.cn
+2, weibo.com
+2, weibocdn.com
+3, weibo

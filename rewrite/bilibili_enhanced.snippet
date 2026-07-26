@@ -1,0 +1,12 @@
+#!name=BiliBili Enhanced
+#!source=https://github.com/BiliUniverse/Enhanced/releases/latest/download/BiliBili.Enhanced.snippet
+#!converted=Quantumult X rewrite resource normalized for Anywhere .snippet import
+
+[rewrite_local]
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/resource\/show\/tab\/v2\? url script-response-body https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/account\/mine(\/ipad)?\? url script-response-body https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/region\/index\? url script-response-body https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js
+^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/channel\/region\/list\? url script-response-body https://github.com/BiliUniverse/Enhanced/releases/download/v0.5.13/response.bundle.js
+
+[mitm]
+hostname = app.bilibili.com, app.biliapi.net

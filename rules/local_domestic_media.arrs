@@ -1,0 +1,7 @@
+# Local rules converted from titi14gj-2025new.conf
+# Quantumult X policy: 🍔 国内媒体
+# Exact HOST rules are represented as Anywhere domain-suffix rules.
+name = Local - 🍔 国内媒体
+routing = 0
+
+2, live.cdn.huya.com

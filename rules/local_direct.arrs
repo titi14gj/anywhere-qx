@@ -1,0 +1,18 @@
+# Local rules converted from titi14gj-2025new.conf
+# Quantumult X policy: direct / 🌐 全球直连
+# Exact HOST rules are represented as Anywhere domain-suffix rules.
+name = Local - direct / 🌐 全球直连
+routing = 1
+
+2, xiaoheihe.cn
+2, kunlunjyk.com
+2, 95504.net
+2, gantanhao.vip
+2, jsjngf.com
+2, wins.cool
+2, baimiaoapp.com
+2, qichacha.net
+2, smartmidea.net
+2, kfc.com.cn
+2, api.xiachufang.com
+3, 95516.com

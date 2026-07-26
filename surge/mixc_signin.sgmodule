@@ -1,0 +1,10 @@
+#!name=一点万象自动签到
+#!desc=请求阶段捕获签到参数，并通过 Surge $persistentStore 供每日 cron 读取
+#!source=https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/mixc_signin.js
+
+[Script]
+一点万象参数捕获 = type=http-request, pattern=^https?:\/\/app\.mixcapp\.com\/mixc\/gateway, script-path=https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/mixc_signin.js, requires-body=true, timeout=15
+一点万象每日签到 = type=cron, cronexp="1 0 * * *", script-path=https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/mixc_signin.js, timeout=30
+
+[MITM]
+hostname = %APPEND% app.mixcapp.com

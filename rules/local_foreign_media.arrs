@@ -1,0 +1,11 @@
+# Local rules converted from titi14gj-2025new.conf
+# Quantumult X policy: 🍿 国外媒体
+# Exact HOST rules are represented as Anywhere domain-suffix rules.
+name = Local - 🍿 国外媒体
+routing = 0
+
+2, webplayer.tv.in
+2, kqgfbs.com
+3, 188766.xyz
+3, iill
+2, micu.hk

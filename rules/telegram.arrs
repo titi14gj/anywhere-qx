@@ -1,0 +1,42 @@
+# Telegram - Anywhere Routing Rule Set
+# Source: https://whatshub.top/rule/Telegram.list
+# Quantumult X policy: 📲 Telegram
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = Telegram
+routing = 0
+
+2, api.imem.app
+2, api.swiftgram.app
+2, cdn-telegram.org
+2, comments.app
+2, contest.com
+2, graph.org
+2, legra.ph
+2, mbrx.app
+2, quiz.directory
+2, stel.com
+2, t.me
+2, tdesktop.com
+2, telega.one
+2, telegra.ph
+2, telegram-cdn.org
+2, telegram.dog
+2, telegram.me
+2, telegram.org
+2, telegram.space
+2, telegramdownload.com
+2, telesco.pe
+2, tg.dev
+2, tx.me
+2, usercontent.dev
+3, nicegram
+0, 109.239.140.0/24
+0, 139.59.210.98/32
+0, 149.154.160.0/20
+0, 196.55.216.167/32
+0, 5.28.192.0/18
+0, 91.108.0.0/16
+1, 2001:67c:4e8::/48
+1, 2001:b28:f23c::/47
+1, 2001:b28:f23f::/48
+1, 2a0a:f280::/29

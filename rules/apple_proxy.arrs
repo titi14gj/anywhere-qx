@@ -1,0 +1,46 @@
+# Apple Proxy - Anywhere Routing Rule Set
+# Source: https://whatshub.top/rule/AppleProxy.list
+# Quantumult X policy: 🚀 策略选择
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = Apple Proxy
+routing = 0
+
+2, api-glb-sea.smoot.apple.com
+2, apple.comscoreresearch.com
+2, books.itunes.apple.com
+2, cdn.apple-cloudkit.com
+2, cvws.icloud-content.com
+2, developer.apple.com
+2, devimages-cdn.apple.com
+2, devstreaming-cdn.apple.com
+2, docs-assets.developer.apple.com
+2, gspe1-ssl.ls.apple.com
+2, hls-svod.itunes.apple.com
+2, itunes.apple.com
+2, js-cdn.music.apple.com
+2, lookup-api.apple.com
+2, mask-api.icloud.com
+2, mask-h2.icloud.com
+2, mask.icloud.com
+2, news-assets.apple.com
+2, news-client.apple.com
+2, news-edge.apple.com
+2, news-events.apple.com
+2, np-edge.itunes.apple.com
+2, play-edge.itunes.apple.com
+2, sandbox.itunes.apple.com
+2, testflight.apple.com
+2, tv.applemusic.com
+2, uts-api.itunes.apple.com
+2, apple-dns.net
+2, apple.news
+2, apps.apple.com
+2, appsto.re
+2, audio-ssl.itunes.apple.com
+2, blobstore.apple.com
+2, cdn-apple.com
+2, digicert.com
+2, hls-amt.itunes.apple.com
+2, hls.itunes.apple.com
+2, ocsp.apple.com
+2, tv.apple.com

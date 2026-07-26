@@ -2,6 +2,8 @@
 
 将 Quantumult X、Surge 等平台的脚本适配为 Anywhere 可用格式。
 
+完整的 Quantumult X 配置迁移结果见 [`MIGRATION_REPORT.md`](MIGRATION_REPORT.md)：包括已转换文件、手动策略映射、部分转换规则和未转换原因。仓库不会保存节点订阅、代理凭据、Cookie 或 MITM 证书。
+
 ## 分流规则
 
 ### F1 TV

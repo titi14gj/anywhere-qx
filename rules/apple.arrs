@@ -1,0 +1,27 @@
+# Apple - Anywhere Routing Rule Set
+# Source: https://whatshub.top/rule/Apple.list
+# Quantumult X policy: 🍎 苹果服务
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = Apple
+routing = 0
+
+3, apple-support.akadns.net
+3, apple.com.akadns.net
+3, apple.com.edgekey.net
+3, buy.itunes.apple.com
+3, smp-device
+3, testflight
+3, icloud.com.akadns.net
+0, 139.178.128.0/18
+0, 144.178.0.0/19
+0, 144.178.36.0/22
+0, 144.178.48.0/20
+0, 17.0.0.0/8
+0, 192.35.50.0/24
+0, 198.183.17.0/24
+0, 205.180.175.0/24
+0, 63.92.224.0/19
+0, 65.199.22.0/23
+1, 2403:300::/32
+1, 2620:149::/32
+1, 2a01:b740::/32

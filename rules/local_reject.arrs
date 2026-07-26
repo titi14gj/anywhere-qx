@@ -1,0 +1,9 @@
+# Local rules converted from titi14gj-2025new.conf
+# Quantumult X policy: reject
+# Exact HOST rules are represented as Anywhere domain-suffix rules.
+name = Local - reject
+routing = 2
+
+2, hub5idx.v6.shub.sandai.net
+2, hub5emu.v6.shub.sandai.net
+2, hub5btmain.v6.shub.sandai.net

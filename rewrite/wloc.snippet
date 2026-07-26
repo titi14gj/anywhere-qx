@@ -1,0 +1,10 @@
+#!name=Apple WLOC 定位修改
+#!source=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.conf
+#!converted=Quantumult X rewrite resource normalized for Anywhere .snippet import
+
+[rewrite_local]
+^https?:\/\/gs-loc(-cn)?\.apple\.com\/clls\/wloc url script-response-body https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc.js
+^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save url script-echo-response https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc-settings.js
+
+[mitm]
+hostname = gs-loc.apple.com, gs-loc-cn.apple.com

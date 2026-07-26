@@ -1,0 +1,71 @@
+# AI - Anywhere Routing Rule Set
+# Source: https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/AI.list
+# Quantumult X policy: 🤖️ 人工智能
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = AI
+routing = 0
+
+2, chatgpt.livekit.cloud
+2, host.livekit.cloud
+2, turn.livekit.cloud
+2, openai.com.cdn.cloudflare.net
+2, openaiapi-site.azureedge.net
+2, openaicomproductionae4b.blob.core.windows.net
+2, production-openaicom-storage.azureedge.net
+2, chat.com
+2, chatgpt.com
+2, oaistatic.com
+2, oaiusercontent.com
+2, openai.com
+2, sora.com
+2, apple-relay.apple.com
+2, apple-relay.fastly-edge.com
+2, apple-relay.cloudflare.com
+2, apple-relay.akamaized.net
+2, gateway.icloud.com
+2, guzzoni.apple.com
+2, cp4.cloudflare.com
+2, gspe1-ssl.ls.apple.com
+2, apps.mzstatic.com
+2, api.githubcopilot.com
+2, copilot-proxy.githubusercontent.com
+2, copilot.microsoft.com
+2, sydney.bing.com
+2, githubcopilot.com
+2, ai.google.dev
+2, aida.googleapis.com
+2, aistudio.google.com
+2, alkalicore-pa.clients6.google.com
+2, alkalimakersuite-pa.clients6.google.com
+2, bard.google.com
+2, deepmind.com
+2, deepmind.google
+2, geller-pa.googleapis.com
+2, gemini.google.com
+2, generativeai.google
+2, generativelanguage.googleapis.com
+2, makersuite.google.com
+2, proactivebackend-pa.googleapis.com
+2, anthropic.com
+2, claude.ai
+2, claude.com
+2, clau.de
+2, claudeusercontent.com
+0, 160.79.104.0/23
+1, 2607:6bc0::/48
+2, grazie.ai
+2, grazie.aws.intellij.net
+2, jetbrains.ai
+2, imagine.meta.com
+2, meta.ai
+2, pplx.ai
+2, perplexity.ai
+2, perplexity.com
+2, chat.mistral.ai
+2, console.mistral.ai
+2, mistral.ai
+2, api.x.ai
+2, x.ai
+2, grok.com
+2, trae-api-sg.mchost.guru
+2, trae.ai

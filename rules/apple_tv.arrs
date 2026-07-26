@@ -1,0 +1,14 @@
+# Apple TV - Anywhere Routing Rule Set
+# Source: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/QuantumultX/AppleTV/AppleTV.list
+# Quantumult X policy: 🇺🇸 美国节点
+# DOMAIN/HOST rules are represented as Anywhere domain-suffix rules.
+name = Apple TV
+routing = 0
+
+2, hls-amt.itunes.apple.com
+2, hls.itunes.apple.com
+2, np-edge.itunes.apple.com
+2, play-edge.itunes.apple.com
+2, tv.applemusic.com
+2, uts-api.itunes.apple.com
+2, tv.apple.com

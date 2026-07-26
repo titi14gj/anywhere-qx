@@ -1,0 +1,7 @@
+# Local rules converted from titi14gj-2025new.conf
+# Quantumult X policy: 🇭🇰 香港节点
+# Exact HOST rules are represented as Anywhere domain-suffix rules.
+name = Local - 🇭🇰 香港节点
+routing = 0
+
+2, hk.hls.gd
