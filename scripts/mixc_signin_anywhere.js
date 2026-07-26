@@ -1,16 +1,41 @@
 /*
- * 一点万象签到 - Anywhere cron 版
+ * 一点万象签到 - Anywhere Automation/cron 版
  *
- * 登录参数由 mixc_signin_anywhere.amrs 捕获，并通过 Anywhere.store 持久化。
- * 本脚本由支持 cron 的 Anywhere 客户端加载后立即执行一次。
+ * 参数由 mixc_signin_anywhere.amrs 捕获，通过 $persistentStore 共享。
+ * 使用 $httpClient 和 $done，确保 Automation 能识别任务完成。
  */
 
 const STORE_CFG = "mixc_signin_params";
 const STORE_DAY = "mixc_signin_last_day";
 const STORE_RESULT = "mixc_signin_last_result";
 const SECRET = "P@Gkbu0shTNHjhM!7F";
-const SIGN_ACTION = "mixc.app.memberSign.sign";
 const GATEWAY = "https://app.mixcapp.com/mixc/gateway";
+
+let finished = false;
+
+function log(message) {
+  if (typeof console !== "undefined") console.log(message);
+}
+
+function readStore(key) {
+  return typeof $persistentStore !== "undefined" ? $persistentStore.read(key) : null;
+}
+
+function writeStore(value, key) {
+  return typeof $persistentStore !== "undefined" && $persistentStore.write(value, key);
+}
+
+function finish(result) {
+  if (finished) return;
+  finished = true;
+  $done(result);
+}
+
+function fail(message) {
+  log("一点万象：" + message);
+  writeStore(today() + " " + message, STORE_RESULT);
+  finish({ error: message });
+}
 
 function pad2(number) {
   return number < 10 ? "0" + number : String(number);
@@ -49,22 +74,11 @@ function calculateSignature(parameters) {
   return md5(source + SECRET);
 }
 
-function loadConfig() {
-  const raw = Anywhere.store.getString(STORE_CFG, true);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw);
-  } catch (error) {
-    Anywhere.log.error("一点万象：缓存参数解析失败 " + error);
-    return null;
-  }
-}
-
-function buildSignParameters(config) {
+function buildParameters(config) {
   const milliseconds = Date.now();
   const parameters = {
     "X-Mixc-Swimlane": config["X-Mixc-Swimlane"] || "s1",
-    action: SIGN_ACTION,
+    action: "mixc.app.memberSign.sign",
     apiVersion: config.apiVersion || "1.0",
     appId: config.appId || "68a91a5bac6a4f3e91bf4b42856785c6",
     appVersion: config.appVersion || "4.2.0",
@@ -85,10 +99,16 @@ function buildSignParameters(config) {
   return parameters;
 }
 
-function parseResult(payload) {
+function parseResult(text) {
+  let payload;
+  try {
+    payload = JSON.parse(text);
+  } catch (_) {
+    throw new Error("响应解析失败：" + String(text).slice(0, 120));
+  }
+
   const code = Number(payload.code);
   const message = String(payload.message || payload.msg || "");
-
   if (code === 0 && payload.data) {
     const points = payload.data.point != null
       ? payload.data.point
@@ -104,9 +124,39 @@ function parseResult(payload) {
   throw new Error("签到失败：code=" + payload.code + " " + message);
 }
 
-async function sign(config) {
-  Anywhere.log.info("一点万象：开始发送签到请求");
-  const response = await Anywhere.http.post(GATEWAY, {
+function run() {
+  if (typeof $persistentStore === "undefined") {
+    fail("当前 Automation 不支持 $persistentStore");
+    return;
+  }
+  if (typeof $httpClient === "undefined" || typeof $done !== "function") {
+    fail("当前 Automation 缺少 $httpClient 或 $done");
+    return;
+  }
+
+  let config;
+  try {
+    const raw = readStore(STORE_CFG);
+    config = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    fail("共享参数解析失败，请重新打开一点万象签到页");
+    return;
+  }
+  if (!config || !config.token || !config.deviceParams || !config.mallNo) {
+    fail("共享存储中没有有效参数，请启用 MITM 规则并打开一点万象签到页");
+    return;
+  }
+
+  const day = today();
+  if (readStore(STORE_DAY) === day) {
+    log("一点万象：今日任务已执行，跳过重复签到");
+    finish({ status: 200 });
+    return;
+  }
+
+  writeStore(day, STORE_DAY);
+  const request = {
+    url: GATEWAY,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) " +
@@ -118,72 +168,32 @@ async function sign(config) {
       "Accept": "application/json, text/plain, */*",
       "Accept-Language": "zh-CN,zh-Hans;q=0.9"
     },
-    body: encodeForm(buildSignParameters(config)),
-    timeout: 10000
+    body: encodeForm(buildParameters(config))
+  };
+
+  log("一点万象：开始发送签到请求");
+  $httpClient.post(request, function (error, response, data) {
+    if (error) {
+      writeStore("", STORE_DAY);
+      fail("网络请求失败：" + error);
+      return;
+    }
+    const status = Number(response && (response.status || response.statusCode));
+    if (status < 200 || status >= 300) {
+      writeStore("", STORE_DAY);
+      fail("HTTP 状态异常：" + status);
+      return;
+    }
+    try {
+      const result = parseResult(data);
+      writeStore(day + " " + result, STORE_RESULT);
+      log("一点万象：" + result);
+      finish({ status: status || 200 });
+    } catch (error) {
+      writeStore("", STORE_DAY);
+      fail(String(error));
+    }
   });
-
-  Anywhere.log.info("一点万象：收到响应，HTTP " + response.status);
-  if (response.status < 200 || response.status >= 300) {
-    throw new Error("HTTP 状态异常：" + response.status);
-  }
-
-  const text = Anywhere.codec.utf8.decode(response.body);
-  let payload;
-  try {
-    payload = JSON.parse(text);
-  } catch (_) {
-    throw new Error("响应解析失败：" + text.slice(0, 120));
-  }
-  return parseResult(payload);
 }
 
-async function runCron() {
-  const config = loadConfig();
-  if (!config || !config.token || !config.deviceParams || !config.mallNo) {
-    const message = "未抓到有效参数，请先启用 MITM 规则并打开一点万象签到页";
-    Anywhere.store.set(STORE_RESULT, today() + " " + message, true);
-    Anywhere.log.error("一点万象：" + message);
-    return;
-  }
-
-  const day = today();
-  if (Anywhere.store.getString(STORE_DAY, true) === day) {
-    Anywhere.log.info("一点万象：今日任务已执行，跳过重复签到");
-    return;
-  }
-
-  // 先加锁，避免手动运行与定时任务同时触发两次签到。
-  Anywhere.store.set(STORE_DAY, day, true);
-  try {
-    const result = await sign(config);
-    Anywhere.store.set(STORE_RESULT, day + " " + result, true);
-    Anywhere.log.info("一点万象：" + result);
-  } catch (error) {
-    // 网络或业务失败时释放锁，允许手动执行或下次 cron 重试。
-    Anywhere.store.delete(STORE_DAY, true);
-    Anywhere.store.set(STORE_RESULT, day + " " + String(error), true);
-    Anywhere.log.error("一点万象：" + error);
-  }
-}
-
-async function main() {
-  await runCron();
-}
-
-async function process() {
-  await runCron();
-}
-
-/*
- * 以表达式形式立即执行并返回 Promise：既兼容只求值脚本的 cron 执行器，
- * 也兼容会主动调用 main/process 的实现；每日锁会阻止兼容入口造成重复请求。
- */
-(async function () {
-  try {
-    Anywhere.log.info("一点万象：cron 任务启动");
-    await runCron();
-    Anywhere.log.info("一点万象：cron 任务结束");
-  } catch (error) {
-    Anywhere.log.error("一点万象：cron 未捕获异常 " + error);
-  }
-})();
+run();
