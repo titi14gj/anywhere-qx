@@ -2,12 +2,11 @@
  * 国内油价提醒 - Anywhere Automation 版
  * 来源逻辑：deezertidal/private/oil.js
  *
- * 如果 Automation 没有注入 $argument，请直接修改 DEFAULT_PROVINCE。
- * 省份名称不要带“省”字。
+ * 使用 Automation 已验证支持的 Surge/QX 兼容接口：
+ * $httpClient、$notification/$notify、$done。
  */
 
 const DEFAULT_PROVINCE = "江苏";
-const REQUEST_BUDGET_MS = 8000;
 const API_KEYS = [
   "231de491563c35731436829ac52aad43",
   "a2bc7a0e01be908881ff752677cf94b7",
@@ -15,6 +14,10 @@ const API_KEYS = [
   "3c5ee42145c852de4147264f25b858dc",
   "d718b0f7c2b6d71cb3a9814e90bf847f"
 ];
+
+let currentIndex = 0;
+let lastError = "没有可用的接口响应";
+let completed = false;
 
 function automationArgument() {
   if (typeof $argument === "undefined" || $argument == null) return "";
@@ -47,56 +50,35 @@ function selectedProvince() {
   return (automationArgument() || DEFAULT_PROVINCE).replace(/省$/, "");
 }
 
-function decodeBody(body) {
-  if (typeof body === "string") return body;
-  return Anywhere.codec.utf8.decode(body);
-}
-
-async function fetchOilPrice(province) {
-  const startedAt = Date.now();
-  let lastError = "没有可用的接口响应";
-
-  for (let index = 0; index < API_KEYS.length; index += 1) {
-    const remaining = REQUEST_BUDGET_MS - (Date.now() - startedAt);
-    if (remaining <= 500) break;
-
-    const url = "https://apis.tianapi.com/oilprice/index?key=" +
-      API_KEYS[index] + "&prov=" + encodeURIComponent(province);
-    try {
-      const response = await Anywhere.http.get(url, {
-        timeout: Math.min(2500, remaining)
-      });
-      if (response.status < 200 || response.status >= 300) {
-        lastError = "HTTP " + response.status;
-        continue;
-      }
-
-      const payload = JSON.parse(decodeBody(response.body));
-      if (Number(payload.code) === 200 && payload.result) return payload.result;
-      lastError = String(payload.msg || "API 返回 code=" + payload.code);
-    } catch (error) {
-      lastError = String(error);
-    }
-    Anywhere.log.warning("油价：接口 " + (index + 1) + " 不可用，尝试下一个");
-  }
-  throw new Error(lastError);
+function finish(result) {
+  if (completed) return;
+  completed = true;
+  $done(result || {});
 }
 
 function sendNotification(title, subtitle, body) {
-  const notification = Anywhere.notification;
-  if (typeof notification === "function") {
-    notification(title, subtitle, body);
-    return true;
+  try {
+    if (typeof $notification !== "undefined" &&
+        typeof $notification.post === "function") {
+      $notification.post(title, subtitle, body);
+      return;
+    }
+    if (typeof $notify !== "undefined") {
+      $notify(title, subtitle, body);
+      return;
+    }
+    if (typeof Anywhere !== "undefined" && Anywhere.notification) {
+      if (typeof Anywhere.notification.post === "function") {
+        Anywhere.notification.post(title, subtitle, body);
+        return;
+      }
+      if (typeof Anywhere.notification.send === "function") {
+        Anywhere.notification.send(title, subtitle, body);
+      }
+    }
+  } catch (error) {
+    console.log("油价：通知发送失败 " + error);
   }
-  if (notification && typeof notification.post === "function") {
-    notification.post(title, subtitle, body);
-    return true;
-  }
-  if (notification && typeof notification.send === "function") {
-    notification.send(title, subtitle, body);
-    return true;
-  }
-  return false;
 }
 
 function formatOilPrice(result) {
@@ -108,27 +90,66 @@ function formatOilPrice(result) {
   ].join("\n");
 }
 
-async function runOilPrice() {
-  const province = selectedProvince();
-  Anywhere.log.info("油价：正在查询" + province);
-
-  const result = await fetchOilPrice(province);
-  const title = String(result.prov || province) + "油价提醒";
-  const subtitle = String(result.time || "");
-  const body = formatOilPrice(result);
-
-  if (!sendNotification(title, subtitle, body)) {
-    Anywhere.log.warning("油价：当前 Automation 未提供可识别的通知方法");
+function handleResponse(data, response) {
+  let payload;
+  try {
+    payload = typeof data === "string" ? JSON.parse(data) : data;
+  } catch (error) {
+    lastError = "响应解析失败：" + error;
+    tryNextAPI();
+    return;
   }
-  Anywhere.log.info(title + "\n" + subtitle + "\n" + body);
+
+  if (payload && Number(payload.code) === 200 && payload.result) {
+    const result = payload.result;
+    const title = String(result.prov || selectedProvince()) + "油价提醒";
+    const subtitle = String(result.time || "");
+    const body = formatOilPrice(result);
+
+    sendNotification(title, subtitle, body);
+    console.log(title + "\n" + subtitle + "\n" + body);
+    finish({
+      status: Number(response && (response.status || response.statusCode)) || 200
+    });
+    return;
+  }
+
+  lastError = String(payload && (payload.msg || "API 返回 code=" + payload.code));
+  tryNextAPI();
 }
 
-(async function () {
-  try {
-    await runOilPrice();
-  } catch (error) {
-    Anywhere.log.error("油价查询失败：" + error);
-  } finally {
-    if (typeof Anywhere.done === "function") Anywhere.done();
+function tryNextAPI() {
+  if (completed) return;
+  if (currentIndex >= API_KEYS.length) {
+    console.log("油价查询失败：" + lastError);
+    finish({ error: lastError });
+    return;
   }
-})();
+
+  const index = currentIndex++;
+  const province = selectedProvince();
+  const url = "https://apis.tianapi.com/oilprice/index?key=" +
+    API_KEYS[index] + "&prov=" + encodeURIComponent(province);
+
+  console.log("油价：正在查询" + province + "（接口 " + (index + 1) + "）");
+  $httpClient.get(url, function (error, response, data) {
+    if (error) {
+      lastError = String(error);
+      tryNextAPI();
+      return;
+    }
+    const status = Number(response && (response.status || response.statusCode));
+    if (status && (status < 200 || status >= 300)) {
+      lastError = "HTTP " + status;
+      tryNextAPI();
+      return;
+    }
+    handleResponse(data, response);
+  });
+}
+
+if (typeof $httpClient === "undefined" || typeof $done === "undefined") {
+  console.log("油价查询失败：Automation 未提供 $httpClient/$done");
+} else {
+  tryNextAPI();
+}

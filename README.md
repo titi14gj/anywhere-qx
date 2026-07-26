@@ -6,7 +6,7 @@
 
 文件：[`scripts/oil_price_anywhere.js`](scripts/oil_price_anywhere.js)
 
-该脚本适用于支持 Automation/cron JavaScript 的 Anywhere 客户端，不依赖 MITM 或持久化存储。
+该脚本适用于支持 Automation/cron JavaScript 的 Anywhere 客户端，不依赖 MITM 或持久化存储。它使用已验证的 Surge/QX 兼容接口 `$httpClient` 和 `$done`；查询完成后会明确结束任务，避免出现“已输出油价但任务仍超时”。
 
 ### 使用方法
 
