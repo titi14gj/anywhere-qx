@@ -1,46 +1,46 @@
 # 一点万象签到 Anywhere 版
 
-由 Quantumult X 自动签到脚本适配为 Anywhere MITM 规则。
-
-## 工作方式
-
-Anywhere 当前没有独立的 cron JavaScript 执行器，因此本版本采用“惰性每日签到”：
-
-1. 一点万象 App 请求 `app.mixcapp.com/mixc/gateway` 时，规则捕获签到所需的登录参数。
-2. 当天首次捕获到完整参数后，脚本通过 `Anywhere.http` 自动执行一次签到。
-3. 当日状态保存在 `Anywhere.store`，后续请求不会重复签到。
-4. 请求失败会释放当日锁，下次 App 请求时可以重试。
-
-这意味着它不能在 App 完全没有网络活动时于固定时间后台运行；每天打开一次一点万象 App 即可触发。
-
-## 安装
-
-1. 在 Anywhere 中安装并信任 MITM 根证书。
-2. 下载并导入 [`mixc_signin_anywhere.amrs`](./mixc_signin_anywhere.amrs)。
-3. 启用“一点万象每日签到”MITM 规则集。
-4. 打开一点万象 App，进入会员页或其他会访问网关的页面。
-5. 在 Anywhere 日志中查看“签到参数已更新”和签到结果。
-
-也可以使用远程规则集链接：
-
-```text
-https://raw.githubusercontent.com/titi14gj/anywhere-qx/main/mixc_signin_anywhere.amrs
-```
+由 Quantumult X 脚本适配，采用“MITM 捕获参数 + cron 定时签到”的方式运行。
 
 ## 文件
 
-- `mixc_signin_anywhere.js`：可读、可维护的 Anywhere 脚本源码。
-- `mixc_signin_anywhere.amrs`：可直接导入 Anywhere 的规则集，内嵌上述脚本的 Base64。
-- `scripts/build-amrs.mjs`：从 JavaScript 源码重新生成 `.amrs`。
+- `mixc_signin_anywhere.amrs`：导入 Anywhere，用于捕获并更新登录参数。
+- `mixc_signin_anywhere.js`：添加到 Anywhere cron 定时任务，用于执行签到。
 
-修改 JavaScript 后运行：
+## 使用方法
 
-```bash
-node scripts/build-amrs.mjs
+1. 在 Anywhere 中安装并信任 MITM 证书。
+2. 导入并启用 `mixc_signin_anywhere.amrs`。
+3. 打开一点万象 App，进入会员页或签到页，使脚本捕获 `token`、`mallNo` 和设备参数。
+4. 在 Anywhere 的 cron 定时任务中添加 `mixc_signin_anywhere.js`。
+5. 建议 cron 表达式：`1 0 * * *`，即每天 00:01 执行。
+6. 首次配置后，可手动运行一次 cron 脚本验证。
+
+## 脚本入口
+
+- `process(ctx)`：MITM 与 cron 通用入口。
+- `main()`：兼容以 `main` 为入口的 cron 环境。
+
+## 日志
+
+成功时：
+
+```text
+一点万象：签到成功，本次+10积分，当前……
 ```
 
-## 安全说明
+已签到时：
 
-规则会将 `token`、设备参数和商场编号持久化到 Anywhere 的规则集存储中，并使用它们向一点万象官方接口发起签到请求。请勿导入来源不可信的修改版规则，也不要分享 Anywhere 的应用数据。
+```text
+一点万象：今日已签到
+```
 
-MITM 对启用证书固定（certificate pinning）的客户端可能无效。如果参数未被捕获，请确认 Anywhere 隧道、MITM 证书和规则集均已启用。
+登录态失效时：
+
+```text
+一点万象：登录态失效，请重新进入签到页刷新参数
+```
+
+## 说明
+
+脚本设置了每日执行锁，避免手动运行与 cron 同时触发重复签到。请求失败时会释放当日锁，允许再次运行。
