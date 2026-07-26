@@ -1,0 +1,17 @@
+# F1 TV - Anywhere Routing Rule Set
+# Converted from:
+# https://raw.githubusercontent.com/dler-io/Rules/main/Surge/Surge%203/Provider/Media/F1%20TV.list
+#
+# routing: 0 = Default. Import this file, then assign a proxy or chain in
+# Anywhere > Routing Rules.
+name = F1 TV
+routing = 0
+
+2, d2n9h2wits23hf.cloudfront.net
+2, f1prodlive.akamaized.net
+2, mobile-collector.newrelic.com
+2, bitmovin.com
+2, f1esports.com
+2, f1manager.com
+2, f1play.com
+2, formula1.com

@@ -2,6 +2,16 @@
 
 将 Quantumult X、Surge 等平台的脚本适配为 Anywhere 可用格式。
 
+## 分流规则
+
+### F1 TV
+
+文件：[`rules/f1_tv.arrs`](rules/f1_tv.arrs)
+
+由 Surge F1 TV Rule Provider 转换为 Anywhere `.arrs` 格式。导入后需要在 Anywhere 的 **Routing Rules** 中为该规则集指定代理或代理链；文件默认保持 `Default`，不会自行选择节点。
+
+Anywhere 当前没有仅匹配单一域名的规则类型，因此原规则中的 `DOMAIN` 与 `DOMAIN-SUFFIX` 均转换为域名后缀规则。
+
 ## 国内油价提醒
 
 文件：[`scripts/oil_price_anywhere.js`](scripts/oil_price_anywhere.js)
