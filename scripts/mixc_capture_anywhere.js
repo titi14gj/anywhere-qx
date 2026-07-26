@@ -46,7 +46,8 @@ function parseForm(text) {
 
 function readConfig() {
   let raw = null;
-  if (typeof $persistentStore !== "undefined") {
+  if (typeof $persistentStore !== "undefined" &&
+      typeof $persistentStore.read === "function") {
     raw = $persistentStore.read(STORE_CFG);
   }
   if (!raw && typeof Anywhere !== "undefined" && Anywhere.store) {
@@ -64,7 +65,8 @@ function saveConfig(config) {
   const raw = JSON.stringify(config);
   let shared = false;
 
-  if (typeof $persistentStore !== "undefined") {
+  if (typeof $persistentStore !== "undefined" &&
+      typeof $persistentStore.write === "function") {
     shared = $persistentStore.write(raw, STORE_CFG) === true;
   }
   if (typeof Anywhere !== "undefined" && Anywhere.store) {
@@ -73,7 +75,7 @@ function saveConfig(config) {
   return shared;
 }
 
-async function process(ctx) {
+function captureRequest(ctx) {
   if (!ctx || ctx.phase !== "request" || !ctx.url ||
       ctx.url.indexOf("/mixc/gateway") < 0) return;
 
@@ -105,5 +107,17 @@ async function process(ctx) {
       "，共享存储=" + (shared ? "成功" : "不可用"));
   } catch (error) {
     logError("一点万象：参数保存失败 " + error);
+  }
+}
+
+/*
+ * 捕获逻辑不修改 ctx，也不返回 Promise。无论共享存储是否兼容，异常都在
+ * 规则内部终止，原始请求继续传输，避免抓参脚本影响 App 联网。
+ */
+function process(ctx) {
+  try {
+    captureRequest(ctx);
+  } catch (error) {
+    logError("一点万象：捕获脚本异常，已放行原请求 " + error);
   }
 }
