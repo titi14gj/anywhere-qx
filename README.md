@@ -23,22 +23,12 @@
 
 脚本会依次尝试原脚本提供的 TianAPI 接口密钥，并把总请求时间控制在约 8 秒内。第三方接口密钥可能因额度、失效或服务变更而不可用。
 
-## 一点万象签到（共享存储测试版）
+## 一点万象签到（暂缓）
 
 - [`scripts/mixc_signin_anywhere.amrs`](scripts/mixc_signin_anywhere.amrs)：MITM 捕获规则。
-- [`scripts/mixc_capture_anywhere.js`](scripts/mixc_capture_anywhere.js)：上述规则内嵌的可读源码。
 - [`scripts/mixc_signin_anywhere.js`](scripts/mixc_signin_anywhere.js)：cron 签到脚本。
 
-客户端已验证 Automation 环境支持 Surge 兼容接口 `$persistentStore`、`$httpClient` 和 `$done`。捕获规则会把参数写入 `$persistentStore`，cron 脚本从同一个键读取，因此不再依赖按规则集隔离的 `Anywhere.store`。
-
-### 测试方法
-
-1. 更新并启用 `mixc_signin_anywhere.amrs`，打开一点万象签到页。
-2. MITM 日志应显示“签到参数已更新”以及“共享存储=成功”。日志不会输出 token 或设备参数。
-3. 将 `mixc_signin_anywhere.js` 的完整内容复制到 Automation 的 JavaScript 输入框；参数栏留空。
-4. 手动运行一次。成功或失败后脚本都会调用 `$done`，不应再显示超时。
-
-只有抓取或登录态失效时才需要重新打开一点万象；参数有效期间，之后的签到可以完全由 cron 定时执行。
+公开版 Anywhere 的 `Anywhere.store` 按 MITM 规则集隔离；自定义 Automation 若未绑定相同存储作用域，将无法读取 MITM 捕获的登录参数。因此该脚本暂缓使用，等待客户端提供共享存储能力。
 
 ## 安全说明
 
