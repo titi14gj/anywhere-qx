@@ -56,8 +56,6 @@ routing = 0
 2, grazie.ai
 2, grazie.aws.intellij.net
 2, jetbrains.ai
-
-# Meta AI & Muse (Personal Agent & Muse Code)
 2, muse.ai
 2, museai.com
 2, ai.meta.com
@@ -79,7 +77,6 @@ routing = 0
 2, meta-agents-apps.workers.dev
 2, meta-ohttp-config-prod.fastly-edge.com
 2, meta-ohttp-relay-prod.fastly-edge.com
-
 2, pplx.ai
 2, perplexity.ai
 2, perplexity.com
