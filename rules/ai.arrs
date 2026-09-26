@@ -5,6 +5,7 @@
 name = AI
 routing = 0
 
+# OpenAI ChatGPT
 2, chatgpt.livekit.cloud
 2, host.livekit.cloud
 2, turn.livekit.cloud
@@ -18,6 +19,8 @@ routing = 0
 2, oaiusercontent.com
 2, openai.com
 2, sora.com
+
+# Apple Intelligence
 2, apple-relay.apple.com
 2, apple-relay.fastly-edge.com
 2, apple-relay.cloudflare.com
@@ -27,11 +30,15 @@ routing = 0
 2, cp4.cloudflare.com
 2, gspe1-ssl.ls.apple.com
 2, apps.mzstatic.com
+
+# GitHub Copilot
 2, api.githubcopilot.com
 2, copilot-proxy.githubusercontent.com
 2, copilot.microsoft.com
 2, sydney.bing.com
 2, githubcopilot.com
+
+# Google Gemini
 2, ai.google.dev
 2, aida.googleapis.com
 2, aistudio.google.com
@@ -46,6 +53,8 @@ routing = 0
 2, generativelanguage.googleapis.com
 2, makersuite.google.com
 2, proactivebackend-pa.googleapis.com
+
+# Anthropic Claude
 2, anthropic.com
 2, claude.ai
 2, claude.com
@@ -53,9 +62,13 @@ routing = 0
 2, claudeusercontent.com
 0, 160.79.104.0/23
 1, 2607:6bc0::/48
+
+# JetBrains AI
 2, grazie.ai
 2, grazie.aws.intellij.net
 2, jetbrains.ai
+
+# Meta AI & Muse (Personal Agent & Muse Code)
 2, muse.ai
 2, museai.com
 2, ai.meta.com
@@ -77,14 +90,22 @@ routing = 0
 2, meta-agents-apps.workers.dev
 2, meta-ohttp-config-prod.fastly-edge.com
 2, meta-ohttp-relay-prod.fastly-edge.com
+
+# Perplexity AI
 2, pplx.ai
 2, perplexity.ai
 2, perplexity.com
+
+# Mistral AI
 2, chat.mistral.ai
 2, console.mistral.ai
 2, mistral.ai
+
+# Grok AI
 2, api.x.ai
 2, x.ai
 2, grok.com
+
+# Trae AI
 2, trae-api-sg.mchost.guru
 2, trae.ai
