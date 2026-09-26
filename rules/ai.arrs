@@ -56,8 +56,30 @@ routing = 0
 2, grazie.ai
 2, grazie.aws.intellij.net
 2, jetbrains.ai
+
+# Meta AI & Muse (Personal Agent & Muse Code)
+2, muse.ai
+2, museai.com
+2, ai.meta.com
+2, llama.meta.com
+2, llama.com
+2, atmeta.com
+2, auth.meta.com
+2, account.meta.com
+2, accountscenter.meta.com
+2, accounts.meta.com
+2, meta.graph.meta.com
+2, developer.meta.com
 2, imagine.meta.com
 2, meta.ai
+3, metaai
+2, metaaivm.com
+2, metaaiusercontent.com
+2, ecto1usercontent.com
+2, meta-agents-apps.workers.dev
+2, meta-ohttp-config-prod.fastly-edge.com
+2, meta-ohttp-relay-prod.fastly-edge.com
+
 2, pplx.ai
 2, perplexity.ai
 2, perplexity.com
