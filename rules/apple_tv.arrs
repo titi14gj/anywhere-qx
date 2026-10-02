@@ -5,6 +5,8 @@
 name = Apple TV
 routing = 0
 
+2, cma.itunes.apple.com
+2, cma2.itunes.apple.com
 2, hls-amt.itunes.apple.com
 2, hls.itunes.apple.com
 2, np-edge.itunes.apple.com
